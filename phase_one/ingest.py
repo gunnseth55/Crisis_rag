@@ -23,7 +23,7 @@ def extract_text_from_files(file_path:Path)->str | None:
             return None
     elif suffix == ".pdf":
         try:
-            import fitz #PyMuPDF
+            import fitz
             doc = fitz.open(str(file_path))
             pages = []
             for page in doc:
@@ -80,7 +80,7 @@ def ingest_all(knowledge_base_dir: Path, db_path: str):
  
         print(f"\n[Processing] {doc_path.name}")
 
-        text = extract_text_from_file(doc_path)
+        text = extract_text_from_files(doc_path)
         if not text:
             continue
  
