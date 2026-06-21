@@ -5,7 +5,7 @@ from pathlib import Path
 TABLE_NAME="crisis_chunks"
 EMBEDDING_DIM=384   # must match the embedding model's output size
 
-class VectoreStore:
+class VectorStore:
     def __init__ (self, db_path:str):
         self.db_path=db_path
         self._db=None
@@ -16,7 +16,7 @@ class VectoreStore:
         self._db=lancedb.connect(self.db_path)
 
         if TABLE_NAME in self._db.table_names():
-            self._tab;e=self._db.open_table(TABLE_NAME)
+            self._table=self._db.open_table(TABLE_NAME)
             count = self._table.count_rows()
             print(f"[VectorStore] Opened existing table with {count} chunks.")
 
@@ -29,12 +29,22 @@ class VectoreStore:
                 pa.field("vector",      pa.list_(pa.float32(), EMBEDDING_DIM)), 
             ])
             self._table=self._db.create_table(TABLE_NAME,schema=schema)
-            print(f"[VectoreStore] Created new table '{TABLE_NAME}'. ")
+            print(f"[VectorStore] Created new table '{TABLE_NAME}'. ")
     
-    def add_chunks(self,chunks:list[dict]):
+    def add_chunks(self, chunks: list[dict]):
         if not self._table:
-            raise RuntimeError("Call init() before add_chunks()")
-        valid = [c for c in chunks if c.get("vector") and len(c["vector"]) == EMBEDDING_DIM]
+            self.init()
+        
+        valid = []
+        for c in chunks:
+            if c.get("vector") and len(c["vector"]) == EMBEDDING_DIM:
+                valid.append({
+                    "text": c["text"],
+                    "source": c["source"],
+                    "chunk_index": c["chunk_index"],
+                    "token_count": c["token_count"],
+                    "vector": c["vector"]
+                })
  
         if not valid:
             print("[VectorStore] Warning: no valid chunks to add.")
@@ -45,7 +55,7 @@ class VectoreStore:
 
     def search(self, query_vector:list[float], top_k:int=5)->list[dict]:
         if not self._table:
-            raise RuntimeError("Call init() before search()")
+            self.init()
  
         results = (
             self._table.search(query_vector)
@@ -72,7 +82,7 @@ class VectoreStore:
 
     def delete_source(self,source_name:str):
         if not self._table:
-            raise RuntimeError("Call init() before delete_source()")
+            self.init()
         self._table.delete(f"source = '{source_name}'")
         print(f"[VectorStore] Deleted chunks from '{source_name}'.")
 

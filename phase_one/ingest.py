@@ -70,7 +70,7 @@ def ingest_all(knowledge_base_dir: Path, db_path: str):
     already_ingested = store.list_sources()
  
     for doc_path in documents:
-        source_name = doc_path.stem 
+        source_name = doc_path.stem #.stem gives us the filename without the extension
  
       
         if source_name in already_ingested:

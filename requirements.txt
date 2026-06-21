@@ -1,0 +1,7 @@
+
+sentence-transformers
+lancedb
+pyarrow
+tqdm
+pymupdf
+ 
