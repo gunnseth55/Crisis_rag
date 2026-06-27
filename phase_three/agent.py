@@ -30,10 +30,11 @@ PURPOSE:
     ReAct paper: https://arxiv.org/abs/2210.03629
     (Read sections 2 and 3 — the algorithm is simple, 2 pages)
  
-    Why prompt engineering matters for crisis contexts:
+    Why prompt engineering matters for crisis:
     "Prompt Engineering Guide" — https://www.promptingguide.ai/
     (Free, comprehensive, read the "Zero-Shot" and "Chain-of-Thought" sections)
 """
+
 
 import sys
 from pathlib import Path
@@ -77,9 +78,9 @@ INTENT_CONFIGS={
         ),
     },
      "EMOTIONAL": {
-        "min_score":   0.0,   # not used — EMOTIONAL skips RAG
+        "min_score":   0.0,   
         "max_tokens":  200,
-        "system_prompt": None,  # not used — EMOTIONAL has a fixed response
+        "system_prompt": None, 
     },
     "GENERAL": {
         "min_score":   0.40,
@@ -100,12 +101,11 @@ Right now, focus on one thing at a time:
 2. Look around you — identify one safe thing you can see or touch.
 3. You are not alone. Help is available.
  
-Please call 112 now — tell them your location and that you need help.
+Please call 112 now -tell them your location and that you need help.
 Emergency services are trained to help you through exactly this situation.
  
 If you have a specific physical danger (injury, fire, flood), tell me what it is and I will give you steps."""
  
-# The RAG prompt template — kept short to control token count
 RAG_PROMPT = """CONTEXT:
 {context}
  
