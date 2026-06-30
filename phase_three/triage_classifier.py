@@ -166,7 +166,7 @@ class TriageClassifier:
                 f"<|user|>\n{prompt}<|end|>\n"
                 f"<|assistant|>\n"
             )
-            response=self._model._model(
+            response=self._model._model._model(
                 full_prompt,
                 max_tokens=5,
                 temperature=0.0,
