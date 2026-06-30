@@ -1,187 +1,181 @@
 """
-every prompt sent to the model:
-classify the emergency queries into one of these categories:
-Categories: Medical, evacuation, survival, emotional , general
+phase3/triage_classifier.py — Intent classification before retrieval
 
-THE FIVE CATEGORIES AND WHAT CHANGES FOR EACH:
- 
-    MEDICAL
-        What: injuries, first aid, CPR, unconscious, bleeding, fractures
-        Retrieval: min_score raised to 0.50 (must be confident)
-        Prompt: emphasises step-by-step precision, do not move injured
-        Urgency: HIGH — wrong advice here can kill
- 
-    EVACUATION
-        What: escape routes, where to go, trapped, rising water
-        Retrieval: standard min_score 0.45
-        Prompt: emphasises speed, numbered steps, call 112
-        Urgency: HIGH — time-critical
- 
-    SURVIVAL
-        What: water purification, shelter, warmth, food safety
-        Retrieval: standard min_score 0.45
-        Prompt: practical, step-by-step, resource-conscious
-        Urgency: MEDIUM — important but not immediate
- 
-    EMOTIONAL
-        What: fear, panic, hopelessness, trauma
-        Retrieval: SKIPPED — emotional support doesn't come from documents
-        Response: calm acknowledgement, breathing exercise, call 112
-        Urgency: HIGH — but a different kind of urgency
-        GENERAL
-        What: information queries, preparation, general advice
-        Retrieval: standard min_score 0.40 (can be more lenient)
-        Prompt: informative, balanced
-        Urgency: LOW
+CHANGE LOG (fix after observed misclassification):
+    Original design trusted the model over keywords on disagreement.
+    Observed failure: "my leg is bleeding and it won't stop" was
+    classified EVACUATION by the model despite an unambiguous MEDICAL
+    keyword match ("bleeding"). This is dangerous — it caused the
+    MEDICAL-specific stricter retrieval threshold (0.50) to be skipped
+    in favour of EVACUATION's looser threshold (0.45).
 
-        
-LEARNING RESOURCES:
-    Zero-shot classification with LLMs:
-    "Is GPT-3 a Good Few-Shot Learner?" — Brown et al., 2020
-    https://arxiv.org/abs/2005.14165
-    (The paper that showed LLMs can classify without task-specific training)
- 
-    Why triage matters in crisis contexts:
-    The START triage system (Simple Triage and Rapid Treatment) from
-    emergency medicine — same principle: classify first, allocate
-    resources second. https://chemm.hhs.gov/startadult.htm
+    FIX: keyword matches now take priority when they are unambiguous
+    (score >= 2, or score == 1 for MEDICAL specifically, since a single
+    strong medical keyword like "bleeding" or "unconscious" should never
+    be overridden). The model is only used to break ties or classify
+    queries with no keyword matches at all.
+
+    This mirrors real-world triage protocols (e.g. START triage) where
+    explicit symptom presence overrides general impression.
 """
 
 import re
 from dataclasses import dataclass
 
-INTENTS={"MEDICAL","EVACUATION","SURVIVAL","EMOTIONAL","GENERAL"}
+
+INTENTS = {"MEDICAL", "EVACUATION", "SURVIVAL", "EMOTIONAL", "GENERAL"}
+
+# Keywords whose presence is considered an unambiguous medical signal —
+# these should NEVER be overridden by the model, because a missed
+# medical classification is the most dangerous failure mode.
+STRONG_MEDICAL_SIGNALS = [
+    "bleed", "unconscious", "not breath", "cpr", "chok",
+    "heart attack", "seizure", "overdose", "poison",
+]
+
 
 @dataclass
 class TriageResults:
-    """
-    the output of the triage classifier 
-    intent: one of the five categories strings
-    confidence: "high","medium", or "low"- based on how clear the query was
-    reasoning: breif explanation
-    """
-    intent:str
-    confidence:str
-    reasoning:str
+    intent:     str
+    confidence: str
+    reasoning:  str
 
-CLASSIIFICATION_PROMPT="""Classify this emergency query into exactly one category.
-MEDICAL: injuries, bleeding, CPR, unconscious, not breathing, pain, wound, fracture, burn, heart attack, choking
+
+CLASSIFICATION_PROMPT = """Classify this emergency query into exactly one category.
+
+MEDICAL:    injuries, bleeding, CPR, unconscious, not breathing, pain, wound, fracture, burn, heart attack, choking
 EVACUATION: escape, leave, run, where to go, route, trapped, flood rising, get out, which way
-SURVIVAL:  water purification, food safety, warmth, shelter, cold weather, fire, overnight, resources
+SURVIVAL:   water purification, food safety, warmth, shelter, cold weather, fire, overnight, resources
 EMOTIONAL:  scared, afraid, panic, hopeless, crying, alone, traumatized, cannot cope, worried, stressed
-GENERAL: what is, how does, explain, information, prepare, news, advice, general question
+GENERAL:    what is, how does, explain, information, prepare, news, advice, general question
 
-Query:"{query}"
+Query: "{query}"
 
-Answer with ONE word only(MEDICAL/EVACUATION/SURVIVAL/EMOTIONAL/GENERAL):
-"""
+Answer with ONE WORD only (MEDICAL / EVACUATION / SURVIVAL / EMOTIONAL / GENERAL):"""
 
-#keyword based fallback when the model isn't loaded or unavailable
-KEYWORD_RULES=[
-     ("MEDICAL", ["bleeding", "wound", "hurt", "injury", "injured", "pain",
-                    "unconscious", "not breathing", "cpr", "broken", "fracture",
-                    "burn", "cut", "blood", "heart", "choking", "swallowed",
-                    "overdose", "poisoned", "breathing"]),
-    ("EVACUATION",["evacuate", "evacuation", "escape", "leave", "run", "flee",
+
+KEYWORD_RULES = [
+    ("MEDICAL",    ["bleed", "wound", "hurt", "injur", "pain",
+                    "unconscious", "not breath", "cpr", "broken", "fractur",
+                    "burn", "cut", "blood", "heart", "chok", "swallow",
+                    "overdose", "poison", "breath", "pulse", "faint"]),
+    ("EVACUATION", ["evacuat", "escape", "leave", "run", "flee",
                     "trapped", "stuck", "where to go", "route", "shelter",
-                    "rising water", "get out", "exit", "way out"]),
-    ("SURVIVAL", ["water", "purify", "drink", "food", "eat", "warm", "cold",
-                    "shelter", "fire", "overnight", "survive", "heat", "freeze",
-                    "hypothermia", "frostbite", "dehydration"]),
-    ("EMOTIONAL" ,["scared", "afraid", "fear", "panic", "hopeless", "crying",
-                    "alone", "traumatized", "cannot cope", "worried", "anxiety",
-                    "stressed", "help me", "i dont know what to do",
-                    "i don't know what to do"]),
+                    "rising water", "get out", "exit", "way out", "flood"]),
+    ("SURVIVAL",   ["water", "purif", "drink", "food", "eat", "warm", "cold",
+                    "shelter", "fire", "overnight", "surviv", "heat", "freez",
+                    "hypotherm", "frostbit", "dehydrat"]),
+    ("EMOTIONAL",  ["scared", "afraid", "fear", "panic", "hopeless", "cry",
+                    "alone", "traumat", "cannot cope", "worried", "anxiet",
+                    "stress", "help me", "dont know what to do"]),
 ]
 
-def _keyword_classify(query:str) ->str:
+
+def _keyword_classify(query: str) -> tuple[str, int]:
     """
-    Fallback keyword based classifier .
-    Returns the intent  with the most keywords matches, or GENERAL.
+    Returns (intent, score) where score = number of matched keywords.
+    Score is used to judge how confident the keyword match is.
     """
-    query_lower=query.lower()
-    scores={}
+    q = query.lower()
+    scores = {}
     for intent, keywords in KEYWORD_RULES:
-        score=sum(1 for kw in keywords if kw  in query_lower)
-        if score>0:
-            scores[intent]=score
+        score = sum(1 for kw in keywords if kw in q)
+        if score > 0:
+            scores[intent] = score
     if not scores:
-        return "GENERAL"
-    return max(scores, key=scores.get)
+        return "GENERAL", 0
+    best = max(scores, key=scores.get)
+    return best, scores[best]
+
+
+def _has_strong_medical_signal(query: str) -> bool:
+    q = query.lower()
+    return any(sig in q for sig in STRONG_MEDICAL_SIGNALS)
+
 
 class TriageClassifier:
     """
-     Usage:
-        classifier = TriageClassifier(llm_model)
-        result = classifier.classify("my leg is bleeding badly")
-        # result.intent    → "MEDICAL"
-        # result.confidence → "high"
-        # result.reasoning → "query contains 'bleeding' — medical emergency"
+    Classifies a crisis query into one of five intent categories.
 
+    Priority order (changed after observed misclassification):
+        1. Strong medical signal in keywords → MEDICAL, always, no override
+        2. Keyword score >= 2 → trust keywords (model can't override)
+        3. Keyword score == 1 and model agrees → high confidence
+        4. Keyword score == 1 and model disagrees → trust keywords still
+           (model is less reliable than a single clear keyword for safety)
+        5. No keyword match at all → trust the model entirely
     """
-    def __init__(self,llm_model):
-        """
-        llm_model: the Llama() instance from phase_two/llm.py
-        """
-        self.model=llm_model
-    def classify(self, query:str)->TriageResults:
-        """
-        try a keyword classifier first (fast , deterministic)
-        also run the model classification 
-        if they aggres then it has a high confidence
-        if the disagree then we go with the model 
-        if the model output is unparseable then we use the keyword result
-        """
-        keyword_intent=_keyword_classify(query)
-        model_intent=self._model_classify(query)
 
-        if model_intent is None:
+    def __init__(self, llm_instance):
+        self._model = llm_instance
+
+    def classify(self, query: str) -> TriageResults:
+        keyword_intent, keyword_score = _keyword_classify(query)
+        model_intent = self._model_classify(query)
+
+        # Rule 1: unambiguous medical signal always wins — safety first
+        if _has_strong_medical_signal(query):
+            return TriageResults(
+                intent="MEDICAL",
+                confidence="high",
+                reasoning=f"strong medical keyword detected — overrides model ({model_intent})"
+            )
+
+        # Rule 2: strong keyword signal (2+ matches) — trust keywords
+        if keyword_score >= 2:
             return TriageResults(
                 intent=keyword_intent,
-                confidence="low",
-                reasoning=f"keyword match {keyword_intent} (model output is unparseable)"
+                confidence="high",
+                reasoning=f"strong keyword match ({keyword_score} hits) → {keyword_intent}"
             )
-        if model_intent == keyword_intent:
-            confidence="high"
-            reasoning=f"model and keywords agree ->{model_intent}"
-        else:
-            confidence="medium"
-            reasoning=f"model->{model_intent} , keywords->{keyword_intent} (using model)"
-        return TriageResults(
-            intent=model_intent,
-            confidence=confidence,
-            reasoning=reasoning,
-        )
-    def _model_classify(self, query:str)->str| None:
-        """
-        Ask Phi-3 to classify the query.
-        Returns the intent string, or None if output is unparseable.
-        """
 
-        prompt=CLASSIIFICATION_PROMPT.format(query=query)   
-        try:
-            #build the ChatML prompt directly
-            full_prompt=(
-                f"<|system|>\nYou are a classifier. Output ONE word only. <|end|> \n"
-                f"<|user|>\n{prompt}<|end|>\n"
-                f"<|assistant|>\n"
+        # Rule 3/4: weak keyword signal (1 match) — keywords still take priority
+        if keyword_score == 1:
+            if model_intent == keyword_intent:
+                return TriageResults(
+                    intent=keyword_intent, confidence="high",
+                    reasoning=f"model and keyword agree → {keyword_intent}"
+                )
+            return TriageResults(
+                intent=keyword_intent, confidence="medium",
+                reasoning=f"keyword → {keyword_intent} (1 hit), model → {model_intent} (trusting keyword for safety)"
             )
-            response=self._model._model._model(
+
+        # Rule 5: no keyword signal — trust the model
+        if model_intent is not None:
+            return TriageResults(
+                intent=model_intent, confidence="medium",
+                reasoning=f"no keyword match — using model → {model_intent}"
+            )
+
+        return TriageResults(
+            intent="GENERAL", confidence="low",
+            reasoning="no keyword match and model output unparseable — defaulting to GENERAL"
+        )
+
+    def _model_classify(self, query: str) -> str | None:
+        prompt = CLASSIFICATION_PROMPT.format(query=query)
+        full_prompt = (
+            f"<|system|>\nYou are a classifier. Output ONE word only.<|end|>\n"
+            f"<|user|>\n{prompt}<|end|>\n"
+            f"<|assistant|>\n"
+        )
+        try:
+            response = self._model._model(
                 full_prompt,
                 max_tokens=5,
                 temperature=0.0,
                 stop=["<|end|>", "\n", " ", "<|user|>"],
-                echo=False
+                echo=False,
             )
-            raw=response["choices"][0]["text"].strip().upper()
-            clean =re.sub(r"[^A-Z]","",raw)
+            raw   = response["choices"][0]["text"].strip().upper()
+            clean = re.sub(r"[^A-Z]", "", raw)
+
             if clean in INTENTS:
                 return clean
-            
             for intent in INTENTS:
-                if intent.startswith(clean) or clean.startswith(intent[:4]):
+                if intent.startswith(clean[:4]) or clean.startswith(intent[:4]):
                     return intent
-                
-            return None #unparseable
+            return None
         except Exception:
             return None
