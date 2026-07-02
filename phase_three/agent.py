@@ -98,13 +98,13 @@ I can hear that you're in a very frightening situation. That fear is completely 
  
 Right now, focus on one thing at a time:
 1. Take a slow breath in for 4 counts, hold for 4, breathe out for 4.
-2. Look around you — identify one safe thing you can see or touch.
+2. Look around you ,identify one safe thing you can see or touch.
 3. You are not alone. Help is available.
  
-Please call 112 now -tell them your location and that you need help.
+Please call 112 now ,tell them your location and that you need help.
 Emergency services are trained to help you through exactly this situation.
  
-If you have a specific physical danger (injury, fire, flood), tell me what it is and I will give you steps."""
+If you have a specific physical danger (injury, fire, flood), tell me what it is and I will give you steps to survive."""
  
 RAG_PROMPT = """CONTEXT:
 {context}
