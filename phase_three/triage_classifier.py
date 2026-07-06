@@ -29,8 +29,8 @@ INTENTS = {"MEDICAL", "EVACUATION", "SURVIVAL", "EMOTIONAL", "GENERAL"}
 # these should NEVER be overridden by the model, because a missed
 # medical classification is the most dangerous failure mode.
 STRONG_MEDICAL_SIGNALS = [
-    "bleed", "unconscious", "not breath", "cpr", "chok",
-    "heart attack", "seizure", "overdose", "poison",
+    "bleed", "unconscious", "not breath", "cpr", "chok","gasping","burn","fracture","cardiac",""
+    "heart attack", "seizure", "overdose", "poison","bleeding","collapsed","dizzy","chest pain","stroke","severe pain","injury","dehydration"
 ]
 
 
