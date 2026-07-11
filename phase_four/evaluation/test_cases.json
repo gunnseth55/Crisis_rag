@@ -1,0 +1,282 @@
+[
+    {
+        "id": "med_01",
+        "category": "MEDICAL",
+        "query": "Someone is unconscious and not breathing, what do I do",
+        "expected_intent": "MEDICAL",
+        "expected_keywords": [
+            "breathing",
+            "compressions",
+            "airway",
+            "112"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "med_02",
+        "category": "MEDICAL",
+        "query": "My leg is bleeding a lot and it won't stop",
+        "expected_intent": "MEDICAL",
+        "expected_keywords": [
+            "pressure",
+            "bandage",
+            "wound",
+            "bleeding"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "med_03",
+        "category": "MEDICAL",
+        "query": "I got a bad burn on my hand from a fire, what should I do",
+        "expected_intent": "MEDICAL",
+        "expected_keywords": [
+            "cool",
+            "water",
+            "burn"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "med_04",
+        "category": "MEDICAL",
+        "query": "My friend is choking on food and can't speak",
+        "expected_intent": "MEDICAL",
+        "expected_keywords": [
+            "back blows",
+            "abdominal",
+            "thrusts",
+            "heimlich"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "med_05",
+        "category": "MEDICAL",
+        "query": "I think my arm is fractured after falling debris hit me",
+        "expected_intent": "MEDICAL",
+        "expected_keywords": [
+            "splint",
+            "immobil",
+            "fracture"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "evac_01",
+        "category": "EVACUATION",
+        "query": "The floodwater is rising fast near my house, where should I go",
+        "expected_intent": "EVACUATION",
+        "expected_keywords": [
+            "higher ground",
+            "evacuate",
+            "route"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "evac_02",
+        "category": "EVACUATION",
+        "query": "I am trapped under debris after the earthquake and need to get out",
+        "expected_intent": "EVACUATION",
+        "expected_keywords": [
+            "trapped",
+            "signal",
+            "tap",
+            "debris"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "evac_03",
+        "category": "EVACUATION",
+        "query": "A cyclone warning was just issued, what evacuation route should I take",
+        "expected_intent": "EVACUATION",
+        "expected_keywords": [
+            "shelter",
+            "cyclone",
+            "evacuate"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "evac_04",
+        "category": "EVACUATION",
+        "query": "Water is entering my ground floor apartment, I need to escape now",
+        "expected_intent": "EVACUATION",
+        "expected_keywords": [
+            "higher ground",
+            "evacuate",
+            "exit"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "surv_01",
+        "category": "SURVIVAL",
+        "query": "How do I purify drinking water during a flood with no clean supply",
+        "expected_intent": "SURVIVAL",
+        "expected_keywords": [
+            "boil",
+            "purify",
+            "water"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "surv_02",
+        "category": "SURVIVAL",
+        "query": "Is food safe to eat after floodwater touched it",
+        "expected_intent": "SURVIVAL",
+        "expected_keywords": [
+            "discard",
+            "contaminated",
+            "food"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "surv_03",
+        "category": "SURVIVAL",
+        "query": "It's freezing cold outside and I have no heating, how do I stay warm",
+        "expected_intent": "SURVIVAL",
+        "expected_keywords": [
+            "warm",
+            "layers",
+            "hypotherm"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "surv_04",
+        "category": "SURVIVAL",
+        "query": "It's an extreme heatwave and I have no air conditioning, what should I do",
+        "expected_intent": "SURVIVAL",
+        "expected_keywords": [
+            "hydrate",
+            "shade",
+            "heat"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "emo_01",
+        "category": "EMOTIONAL",
+        "query": "I'm so scared right now, I don't know what to do, I feel like panicking",
+        "expected_intent": "EMOTIONAL",
+        "expected_keywords": [
+            "breathe",
+            "112",
+            "not alone"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "emo_02",
+        "category": "EMOTIONAL",
+        "query": "I feel completely hopeless and alone after losing my home",
+        "expected_intent": "EMOTIONAL",
+        "expected_keywords": [
+            "breathe",
+            "112",
+            "not alone"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "emo_03",
+        "category": "EMOTIONAL",
+        "query": "I'm traumatized from what just happened and can't stop crying",
+        "expected_intent": "EMOTIONAL",
+        "expected_keywords": [
+            "breathe",
+            "112",
+            "help is available"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "gen_01",
+        "category": "GENERAL",
+        "query": "What is a glacial lake outburst flood",
+        "expected_intent": "GENERAL",
+        "expected_keywords": [
+            "glacial",
+            "lake",
+            "outburst"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "gen_02",
+        "category": "GENERAL",
+        "query": "How can I prepare my family for an earthquake before it happens",
+        "expected_intent": "GENERAL",
+        "expected_keywords": [
+            "prepare",
+            "earthquake",
+            "kit"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "gen_03",
+        "category": "GENERAL",
+        "query": "What should be in a general emergency preparedness kit",
+        "expected_intent": "GENERAL",
+        "expected_keywords": [
+            "emergency kit",
+            "prepare",
+            "supplies"
+        ],
+        "should_refuse": false
+    },
+    {
+        "id": "oos_01",
+        "category": "OUT_OF_SCOPE",
+        "query": "How do I fix my wifi router, it keeps disconnecting",
+        "expected_intent": null,
+        "expected_keywords": [],
+        "should_refuse": true
+    },
+    {
+        "id": "oos_02",
+        "category": "OUT_OF_SCOPE",
+        "query": "What's a good recipe for chocolate chip cookies",
+        "expected_intent": null,
+        "expected_keywords": [],
+        "should_refuse": true
+    },
+    {
+        "id": "oos_03",
+        "category": "OUT_OF_SCOPE",
+        "query": "Can you recommend a good stock to invest in this year",
+        "expected_intent": null,
+        "expected_keywords": [],
+        "should_refuse": true
+    },
+    {
+        "id": "multi_01",
+        "category": "MULTI_PART",
+        "query": "My leg is bleeding and it won't stop and I'm trapped under debris",
+        "expected_intent": "MEDICAL",
+        "expected_keywords": [
+            "pressure",
+            "bleeding",
+            "112"
+        ],
+        "should_refuse": false,
+        "notes": "Regression case for the documented MEDICAL-vs-EVACUATION misclassification bug"
+    },
+    {
+        "id": "multi_02",
+        "category": "MULTI_PART",
+        "query": "There's a fire nearby and I have no drinking water left",
+        "expected_intent": "SURVIVAL",
+        "expected_keywords": [
+            "water",
+            "purify"
+        ],
+        "should_refuse": false
+    }
+]
