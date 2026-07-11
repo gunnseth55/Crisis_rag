@@ -1,4 +1,20 @@
+<<<<<<< HEAD
 Project ResQ: Offline-First Agentic RAG for Crisis ResponseAn offline-first, resource-efficient Retrieval-Augmented Generation (RAG) agent designed for deployment in disaster zones and communication-degraded environments. The system operates entirely on-device (zero-server, zero-internet dependency) utilizing a Small Language Model (SLM) and a local vector database, with opportunistic synchronization when a network connection is available.🔬 Core Research ContributionUnlike standard RAG architectures or static agentic loops, this project introduces a Pre-Retrieval Triage Intent Classifier integrated into a ReAct (Reason+Act) loop. Before the retrieval mechanism triggers, the user's input is classified into domain-specific crisis categories (e.g., Medical Emergency, Evacuation/Navigation, Survival/Resources). This dynamically filters the vector search space and shifts the system's behavioral persona, significantly reducing chunk dilution, lowering execution latency, and eliminating hallucinatory bleed across unrelated crisis protocols.🏗️ Project Architecture & Phase Blueprint                     [ User Query ]
+=======
+# Project ResQ: Offline-First Agentic RAG for Crisis Response
+
+An offline-first, resource-efficient Retrieval-Augmented Generation (RAG) agent designed for deployment in disaster zones and communication-degraded environments. The system operates entirely on-device (zero-server, zero-internet dependency) utilizing a Small Language Model (SLM) and a local vector database, with opportunistic synchronization when a network connection is available.
+
+### 🔬 Core Research Contribution
+Unlike standard RAG architectures or static agentic loops, this project introduces a **Pre-Retrieval Triage Intent Classifier** integrated into a ReAct (Reason+Act) loop. Before the retrieval mechanism triggers, the user's input is classified into domain-specific crisis categories (e.g., *Medical Emergency, Evacuation/Navigation, Survival/Resources*). This dynamically filters the vector search space and shifts the system's behavioral persona, significantly reducing chunk dilution, lowering execution latency, and eliminating hallucinatory bleed across unrelated crisis protocols.
+
+---
+
+## 🏗️ Project Architecture & Phase Blueprint
+
+```text
+                     [ User Query ]
+>>>>>>> 19b0d90f15d3812c09651099d6e601191db8574d
                            │
                            ▼
              ┌───────────────────────────┐
@@ -29,6 +45,7 @@ Project ResQ: Offline-First Agentic RAG for Crisis ResponseAn offline-first, res
                            │
                            ▼
                    [Final Answer]
+<<<<<<< HEAD
 📂 Repository StructurePlaintextproject-resq/
 ├── data/
 │   └── knowledge_base/        # Curated crisis PDFs, TXTs, MD guidelines
@@ -85,3 +102,7 @@ Model Ingestion SetupDownload the quantized Phi-3 weights and place them inside 
 curl -L -o models/Phi-3-mini-4k-instruct-q4.gguf https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf
 📊 Evaluation & Empirical ResultsThe final research paper metrics can be replicated by running the automated evaluation harness:Bashpython evaluation/run_eval.py
 Research Evaluation Metrics MatrixThe primary empirical defense of this architecture relies on the following performance distribution across the benchmarked test configurations:MetricConfiguration 1: Baseline RAGConfiguration 2: Agentic RAG (Standard)Configuration 3: Project ResQ (Triage + ReAct)Retrieval Noise / Irrelevant ChunksHigh (5/5 chunks raw)Medium (3/5 chunks raw)Low (Filtered Vector Space)Hallucination Rate~12%~8%< 1.5%Avg. Time to First Token (TTFT)~0.8s~3.4s (unbounded loops)~1.9s (bounded context)Multi-Part Query AccuracyPoor (Misses edge data)Moderate (Resolves sequentially)High (Parsed via Intent Matrix)
+=======
+
+
+>>>>>>> 19b0d90f15d3812c09651099d6e601191db8574d

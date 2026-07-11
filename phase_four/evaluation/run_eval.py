@@ -12,7 +12,7 @@ and produces:
     a printed summary table
  
 HOW TO RUN:
-    python phase_four/evaluation/run_eval.py --model /path/to/Phi-3-mini-4k-instruct-q4.gguf
+   python phase_four/evaluation/run_eval.py --model C:\Users\gunn\models\Phi-3-mini-4k-instruct-q4.gguf
  
     Optional:
         --db PATH        (default: data/lancedb)
