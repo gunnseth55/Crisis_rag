@@ -1,0 +1,2 @@
+config,n_cases,errors,avg_keyword_score,intent_accuracy,refusal_correct_rate,source_grounded_rate,avg_latency_sec
+full_agent_with_triage,24,0,0.778,0.905,0.5,0.875,20.248

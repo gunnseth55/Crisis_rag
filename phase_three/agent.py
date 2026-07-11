@@ -131,22 +131,44 @@ class AgentResponse:
     iterations:int
 
 class CrisisAgent:
-   def __init__(self, db_path:str , model_path:str):
+   def __init__(self, db_path:str , model_path:str, use_triage:bool=True):
+       """
+        use_triage=True->full system (config 3):triage classifier + intent aware retrieval thresholds/prompts + ReAct loop
+        use_triage=False->ablation ( config 2): React loop and reformualiton still runs, but the query is treated with a single generic GENERAL config( no intent classification, no -per intent thresholds/prompts, no EMOTIONAL short-circuit)
+       """
+    
        print("[Agent] Initialising.........")
        self.embedder=Embedder()
        self.vector_store=VectorStore(db_path)
        self.vector_store.init()
        self.llm=LLM(model_path)
-       self.classifier=TriageClassifier(self.llm)
+       self.use_triage=use_triage
+       self.classifier=TriageClassifier(self.llm) if use_triage else None
        total=self.vector_store.count()
-       print(f"[Agent] ready . {total} chunks in knowledge base.")
+       print(f"[Agent] ready . {total} chunks in knowledge base. (triage={'on' if use_triage else 'off'})")
 
    def run(self, query:str)->AgentResponse:
-       print(f"\n [Agent] query :{query}")
-       triage: TriageResults=self.classifier.classify(query)
-       print(f"[Agent] Intent: {triage.intent}  Confidence: {triage.confidence}")
-       print(f"[Agent] Reasoning : {triage.reasoning}")
-       if triage.intent=="EMOTIONAL":
+        print(f"\n [Agent] query :{query}")
+
+        if not self.use_triage:# Ablation: skip classification entirely, always use the generic config.
+           answer, sources, iterations = self._react_loop(
+               query  = query,
+               config = INTENT_CONFIGS["GENERAL"],
+               intent = "GENERAL",
+           )
+           return AgentResponse(
+               intent     = "NO_TRIAGE",
+               confidence = "n/a",
+               answer     = answer,
+               sources    = sources,
+               iterations = iterations,
+           )
+
+
+        triage: TriageResults=self.classifier.classify(query)
+        print(f"[Agent] Intent: {triage.intent}  Confidence: {triage.confidence}")
+        print(f"[Agent] Reasoning : {triage.reasoning}")
+        if triage.intent=="EMOTIONAL":
            return AgentResponse(
                intent="EMOTIONAL",
                confidence=triage.confidence,
@@ -154,13 +176,13 @@ class CrisisAgent:
                sources=[],
                iterations=0,
            )
-       config =INTENT_CONFIGS[triage.intent]
-       answer, sources, iterations = self._react_loop(
+        config =INTENT_CONFIGS[triage.intent]
+        answer, sources, iterations = self._react_loop(
             query      = query,
             config     = config,
             intent     = triage.intent,
         )
-       return AgentResponse(
+        return AgentResponse(
            intent     = triage.intent,
             confidence = triage.confidence,
             answer     = answer,

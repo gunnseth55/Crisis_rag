@@ -1,11 +1,11 @@
 """
 evaluation/metrics.py — scoring functions for the Phase 4 comparison harness
- 
+
 We don't have hand-written gold answers (writing 20-30 of those and keeping them
 in sync with the knowledge base is its own project), so these are *proxy* metrics
 computed against `expected_keywords` / `expected_intent` / `should_refuse` in
 test_cases.json:
- 
+
 - keyword_score:  fraction of expected keywords that appear in the answer.
                    A rough stand-in for "did the system actually give the right
                    information", not a substitute for human review.
@@ -17,29 +17,32 @@ test_cases.json:
                    contain at least one chunk (i.e. the answer wasn't generated
                    with zero retrieved context, which almost always means the
                    "content" is coming from the model's own fallback text).
- 
+
 None of these replace manually reading a sample of transcripts before the
 numbers go in the paper — treat them as triage, not ground truth.
 """
- 
+
 REFUSAL_SIGNALS = [
-    "don't have",
-    "do not have",
-    "call 112",
-    "please call 112",
-    "contact your local disaster management",
-    "please contact emergency services",
+    "i don't have specific information",
+    "i don't have specific guidance",
+    "i don't have that information",
+    "i don't have that",
+    "don't have specific",
 ]
- 
-def keyword_score(answer:str, expected_keywords:list[str])->float:
+
+
+def keyword_score(answer: str, expected_keywords: list[str]) -> float:
     if not expected_keywords:
-        return 1.0 #nothing to check against
-    a=answer.lower()
-    hits=sum(1 for kw in expected_keywords if kw.lower() in a)
-    return round(hits/len(expected_keywords),3)
-def is_refusal(answer:str)->bool:
-    a=answer.lower()
+        return 1.0  # nothing to check against — don't penalise
+    a = answer.lower()
+    hits = sum(1 for kw in expected_keywords if kw.lower() in a)
+    return round(hits / len(expected_keywords), 3)
+
+
+def is_refusal(answer: str) -> bool:
+    a = answer.lower()
     return any(sig in a for sig in REFUSAL_SIGNALS)
+
 
 def refusal_is_correct(answer: str, should_refuse: bool) -> bool:
     """
@@ -51,6 +54,8 @@ def refusal_is_correct(answer: str, should_refuse: bool) -> bool:
     if should_refuse:
         return refused
     return not refused
+
+
 def intent_match(actual_intent: str | None, expected_intent: str | None) -> str:
     """
     Returns "match", "mismatch", or "n/a" (when either side has no concept
@@ -62,8 +67,7 @@ def intent_match(actual_intent: str | None, expected_intent: str | None) -> str:
     if actual_intent in ("NO_TRIAGE",):
         return "n/a"
     return "match" if actual_intent == expected_intent else "mismatch"
- 
- 
+
+
 def source_grounded(sources: list) -> bool:
     return bool(sources)
- 

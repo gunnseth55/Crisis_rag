@@ -17,6 +17,22 @@ CHANGE LOG (fix after observed misclassification):
 
     This mirrors real-world triage protocols (e.g. START triage) where
     explicit symptom presence overrides general impression.
+
+CHANGE LOG (fix — model fallback always returned EMOTIONAL):
+    _model_classify used stop=[..., " ", ...]. Phi-3 generates the answer
+    word as a single token with a leading space (e.g. " MEDICAL"), so
+    generation was cut off at that space before any letters came out —
+    `raw` was almost always "". Downstream, the fuzzy match did
+    `intent.startswith(clean[:4])`, and startswith("") is True for every
+    string, so it silently returned whichever intent happened to be first
+    in Python's (arbitrary, per-process) INTENTS set iteration order —
+    observed as EMOTIONAL every time in one run. This meant every query
+    with no keyword hit (general questions, out-of-scope questions) was
+    routed to the hardcoded EMOTIONAL response, skipping RAG entirely.
+
+    FIX: removed " " from the stop list, and added an explicit guard so
+    an empty `clean` string returns None (→ Rule 5 falls back to GENERAL)
+    instead of matching every intent.
 """
 
 import re
@@ -165,11 +181,14 @@ class TriageClassifier:
                 full_prompt,
                 max_tokens=5,
                 temperature=0.0,
-                stop=["<|end|>", "\n", " ", "<|user|>"],
+                stop=["<|end|>", "\n", "<|user|>"],
                 echo=False,
             )
             raw   = response["choices"][0]["text"].strip().upper()
             clean = re.sub(r"[^A-Z]", "", raw)
+
+            if not clean:
+                return None
 
             if clean in INTENTS:
                 return clean
