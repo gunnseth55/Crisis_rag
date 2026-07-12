@@ -33,7 +33,7 @@ REFUSAL_SIGNALS = [
 
 def keyword_score(answer: str, expected_keywords: list[str]) -> float:
     if not expected_keywords:
-        return 1.0  # nothing to check against — don't penalise
+        return 1.0  # nothing to check against don't penalise
     a = answer.lower()
     hits = sum(1 for kw in expected_keywords if kw.lower() in a)
     return round(hits / len(expected_keywords), 3)
