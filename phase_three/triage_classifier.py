@@ -38,6 +38,8 @@ CHANGE LOG (fix — model fallback always returned EMOTIONAL):
 import re
 from dataclasses import dataclass
 
+from shared.query_normalizer import normalize_query
+
 
 INTENTS = {"MEDICAL", "EVACUATION", "SURVIVAL", "EMOTIONAL", "GENERAL"}
 
@@ -126,11 +128,12 @@ class TriageClassifier:
         self._model = llm_instance
 
     def classify(self, query: str) -> TriageResults:
-        keyword_intent, keyword_score = _keyword_classify(query)
+        normalized_query = normalize_query(query)
+        keyword_intent, keyword_score = _keyword_classify(normalized_query)
         model_intent = self._model_classify(query)
 
         # Rule 1: unambiguous medical signal always wins — safety first
-        if _has_strong_medical_signal(query):
+        if _has_strong_medical_signal(normalized_query):
             return TriageResults(
                 intent="MEDICAL",
                 confidence="high",

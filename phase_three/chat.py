@@ -17,8 +17,10 @@ import time
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).parent.parent))
 from phase_three.agent import CrisisAgent
+from sync.sync_manager import SyncManager
 
 DEFAULT_DB_PATH="data/lancedb"
+SYNC_POLL_INTERVAL_SEC = 1800  # 30 min, per README
 INTENT_COLOURS = {
     "MEDICAL":    "\033[91m",   # red    — urgent
     "EVACUATION": "\033[93m",   # yellow — urgent
@@ -50,7 +52,13 @@ def run_chat(model_path:str, db_path:str):
     except Exception as e:
         print(f"\n[ERROR] {e}")
         sys.exit(1)
-    print("\nReady .Typr your question .Commands:'history','clear','quit' ")
+
+    sync_manager = SyncManager(db_path=db_path, poll_interval_sec=SYNC_POLL_INTERVAL_SEC)
+    sync_manager.start()
+    print(f"\n[Sync] Background sync running — checks every {SYNC_POLL_INTERVAL_SEC // 60} min when online.")
+    print("       Offline queries work exactly as before; sync only acts when it can.")
+
+    print("\nReady .Typr your question .Commands:'history','clear','sync','quit' ")
     print_separator()
 
     conversation=[]
@@ -59,17 +67,31 @@ def run_chat(model_path:str, db_path:str):
             user_input=input("\nYou:").strip()
         except (EOFError, KeyboardInterrupt):
             print("\n\nSession ended. Stay safe.")
+            sync_manager.stop()
             break
         if not user_input:
             continue 
 
         if user_input.lower()=="quit":
             print("Session ended. Stay Safe!")
+            sync_manager.stop()
             break
         elif user_input.lower()=="clear":
             conversation=[]
             print("COnversation cleared")
             continue 
+        elif user_input.lower()=="sync":
+            print("Checking for updates now...")
+            result = sync_manager.check_and_sync_once()
+            if result["status"] == "offline":
+                print("Currently offline — nothing to sync.")
+            elif result["status"] == "no_sources":
+                print("No sources configured yet — see sync/sources.json.")
+            else:
+                print(f"Updated: {result['updated'] or 'none'} | "
+                      f"Unchanged: {len(result['unchanged'])} | "
+                      f"Failed: {result['failed'] or 'none'}")
+            continue
         elif user_input.lower()=="history":
             if not conversation:
                 print("No conversation history yet")
@@ -132,5 +154,3 @@ def main():
  
 if __name__ == "__main__":
     main()
- 
-

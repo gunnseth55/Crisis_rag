@@ -45,6 +45,7 @@ from phase_one.embedder import Embedder
 from phase_one.vector_store import VectorStore
 from phase_two.llm import LLM
 from phase_three.triage_classifier import TriageClassifier, TriageResults
+from shared.query_normalizer import normalize_query
 
 INTENT_CONFIGS={
      "MEDICAL": {
@@ -210,7 +211,7 @@ class CrisisAgent:
             - If still nothing useful: return fallback
         Returns: (answer_text, sources_list, iteration_count)
       """
-      search_query=query
+      search_query=normalize_query(query)
       min_score=config["min_score"]
       system_prompt  = config["system_prompt"]
       max_tokens     = config["max_tokens"]
@@ -293,7 +294,3 @@ class CrisisAgent:
         )
  
        return response["choices"][0]["text"].strip()
-       
-
-
- 

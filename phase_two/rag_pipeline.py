@@ -22,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from phase_one.embedder import Embedder
 from phase_one.vector_store import VectorStore
 from phase_two.llm import LLM
+from shared.query_normalizer import normalize_query
 
 
 MIN_SCORE       = 0.45   # raised — below this, content is too loosely related
@@ -53,8 +54,10 @@ class RAGPipeline:
     def query(self, question: str) -> dict:
         print(f"\n[RAG] Query: {question}")
 
-        # 1. Embed the question
-        query_vector = self.embedder.embed(question)
+        # 1. Embed the question (normalized to catch typos in hazard-specific
+        #    terms, e.g. "lamdlside" -> "lamdlside landslide" — see
+        #    shared/query_normalizer.py for why this matters)
+        query_vector = self.embedder.embed(normalize_query(question))
 
         # 2. Retrieve top-K chunks
         results = self.vector_store.search(query_vector, top_k=TOP_K)
