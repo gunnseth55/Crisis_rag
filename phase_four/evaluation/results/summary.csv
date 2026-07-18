@@ -1,4 +1,4 @@
 config,n_cases,errors,avg_keyword_score,intent_accuracy,refusal_correct_rate,source_grounded_rate,avg_latency_sec
-baseline_simple_rag,24,0,0.566,,1.0,0.875,11.537
-ablation_agent_no_triage,24,0,0.531,,0.917,1.0,10.963
-full_agent_with_triage,24,0,0.778,0.905,0.958,0.875,21.562
+baseline_simple_rag,24,0,0.566,,1.0,0.875,14.556
+ablation_agent_no_triage,24,0,0.531,,0.917,1.0,12.394
+full_agent_with_triage,24,0,0.778,0.905,0.958,0.875,20.104

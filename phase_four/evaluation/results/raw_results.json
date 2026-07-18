@@ -14,7 +14,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 24.412,
+    "latency_sec": 34.779,
     "error": null
   },
   {
@@ -32,7 +32,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 10.882,
+    "latency_sec": 13.958,
     "error": null
   },
   {
@@ -50,7 +50,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 12.906,
+    "latency_sec": 17.052,
     "error": null
   },
   {
@@ -68,7 +68,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 12.559,
+    "latency_sec": 16.447,
     "error": null
   },
   {
@@ -86,7 +86,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 12.197,
+    "latency_sec": 16.098,
     "error": null
   },
   {
@@ -104,7 +104,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 10.503,
+    "latency_sec": 13.561,
     "error": null
   },
   {
@@ -122,7 +122,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 11.404,
+    "latency_sec": 14.851,
     "error": null
   },
   {
@@ -140,7 +140,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 11.991,
+    "latency_sec": 15.497,
     "error": null
   },
   {
@@ -158,7 +158,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 14.07,
+    "latency_sec": 18.223,
     "error": null
   },
   {
@@ -176,7 +176,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 13.943,
+    "latency_sec": 17.67,
     "error": null
   },
   {
@@ -194,7 +194,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 8.643,
+    "latency_sec": 10.444,
     "error": null
   },
   {
@@ -212,7 +212,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 12.65,
+    "latency_sec": 16.397,
     "error": null
   },
   {
@@ -230,7 +230,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 14.594,
+    "latency_sec": 18.936,
     "error": null
   },
   {
@@ -248,7 +248,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 12.747,
+    "latency_sec": 16.331,
     "error": null
   },
   {
@@ -266,7 +266,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 8.994,
+    "latency_sec": 11.332,
     "error": null
   },
   {
@@ -284,7 +284,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 12.038,
+    "latency_sec": 14.896,
     "error": null
   },
   {
@@ -302,7 +302,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 13.799,
+    "latency_sec": 15.99,
     "error": null
   },
   {
@@ -320,7 +320,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 13.472,
+    "latency_sec": 15.02,
     "error": null
   },
   {
@@ -338,7 +338,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 17.754,
+    "latency_sec": 20.524,
     "error": null
   },
   {
@@ -356,7 +356,7 @@
     "num_sources": 0,
     "source_grounded": false,
     "iterations": null,
-    "latency_sec": 0.018,
+    "latency_sec": 0.035,
     "error": null
   },
   {
@@ -374,7 +374,7 @@
     "num_sources": 0,
     "source_grounded": false,
     "iterations": null,
-    "latency_sec": 0.022,
+    "latency_sec": 0.018,
     "error": null
   },
   {
@@ -392,7 +392,7 @@
     "num_sources": 0,
     "source_grounded": false,
     "iterations": null,
-    "latency_sec": 0.016,
+    "latency_sec": 0.018,
     "error": null
   },
   {
@@ -410,7 +410,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 11.72,
+    "latency_sec": 13.5,
     "error": null
   },
   {
@@ -428,7 +428,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": null,
-    "latency_sec": 15.546,
+    "latency_sec": 17.779,
     "error": null
   },
   {
@@ -446,7 +446,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 17.607,
+    "latency_sec": 19.869,
     "error": null
   },
   {
@@ -464,7 +464,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 8.246,
+    "latency_sec": 9.494,
     "error": null
   },
   {
@@ -482,7 +482,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 18.526,
+    "latency_sec": 23.158,
     "error": null
   },
   {
@@ -500,7 +500,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 14.002,
+    "latency_sec": 16.59,
     "error": null
   },
   {
@@ -518,7 +518,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 8.289,
+    "latency_sec": 9.261,
     "error": null
   },
   {
@@ -536,7 +536,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 8.974,
+    "latency_sec": 9.643,
     "error": null
   },
   {
@@ -554,7 +554,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 7.151,
+    "latency_sec": 7.135,
     "error": null
   },
   {
@@ -572,7 +572,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 10.75,
+    "latency_sec": 12.032,
     "error": null
   },
   {
@@ -590,7 +590,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 11.409,
+    "latency_sec": 13.138,
     "error": null
   },
   {
@@ -608,7 +608,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 13.321,
+    "latency_sec": 15.617,
     "error": null
   },
   {
@@ -626,7 +626,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 7.325,
+    "latency_sec": 7.577,
     "error": null
   },
   {
@@ -644,7 +644,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 8.536,
+    "latency_sec": 9.488,
     "error": null
   },
   {
@@ -662,7 +662,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 8.58,
+    "latency_sec": 9.603,
     "error": null
   },
   {
@@ -680,7 +680,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 10.192,
+    "latency_sec": 12.101,
     "error": null
   },
   {
@@ -698,7 +698,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 15.501,
+    "latency_sec": 19.55,
     "error": null
   },
   {
@@ -716,7 +716,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 9.229,
+    "latency_sec": 10.862,
     "error": null
   },
   {
@@ -734,7 +734,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 9.109,
+    "latency_sec": 10.509,
     "error": null
   },
   {
@@ -752,7 +752,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 18.36,
+    "latency_sec": 22.462,
     "error": null
   },
   {
@@ -770,7 +770,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 21.139,
+    "latency_sec": 24.756,
     "error": null
   },
   {
@@ -788,7 +788,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 2,
-    "latency_sec": 6.911,
+    "latency_sec": 6.325,
     "error": null
   },
   {
@@ -806,7 +806,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 2,
-    "latency_sec": 7.112,
+    "latency_sec": 6.558,
     "error": null
   },
   {
@@ -824,7 +824,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 2,
-    "latency_sec": 6.447,
+    "latency_sec": 5.914,
     "error": null
   },
   {
@@ -842,7 +842,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 8.467,
+    "latency_sec": 8.633,
     "error": null
   },
   {
@@ -860,7 +860,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 7.919,
+    "latency_sec": 7.179,
     "error": null
   },
   {
@@ -878,7 +878,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 38.131,
+    "latency_sec": 34.223,
     "error": null
   },
   {
@@ -896,7 +896,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 20.881,
+    "latency_sec": 23.016,
     "error": null
   },
   {
@@ -914,7 +914,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 30.152,
+    "latency_sec": 29.666,
     "error": null
   },
   {
@@ -932,7 +932,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 26.077,
+    "latency_sec": 26.426,
     "error": null
   },
   {
@@ -950,7 +950,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 2,
-    "latency_sec": 17.375,
+    "latency_sec": 17.013,
     "error": null
   },
   {
@@ -968,7 +968,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 22.91,
+    "latency_sec": 22.606,
     "error": null
   },
   {
@@ -986,7 +986,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 21.13,
+    "latency_sec": 19.158,
     "error": null
   },
   {
@@ -1004,7 +1004,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 27.209,
+    "latency_sec": 22.538,
     "error": null
   },
   {
@@ -1022,7 +1022,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 23.377,
+    "latency_sec": 20.6,
     "error": null
   },
   {
@@ -1040,7 +1040,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 34.07,
+    "latency_sec": 34.631,
     "error": null
   },
   {
@@ -1058,7 +1058,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 25.465,
+    "latency_sec": 23.345,
     "error": null
   },
   {
@@ -1076,7 +1076,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 30.039,
+    "latency_sec": 23.905,
     "error": null
   },
   {
@@ -1094,7 +1094,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 36.253,
+    "latency_sec": 30.851,
     "error": null
   },
   {
@@ -1112,7 +1112,7 @@
     "num_sources": 0,
     "source_grounded": false,
     "iterations": 0,
-    "latency_sec": 3.278,
+    "latency_sec": 2.689,
     "error": null
   },
   {
@@ -1130,7 +1130,7 @@
     "num_sources": 0,
     "source_grounded": false,
     "iterations": 0,
-    "latency_sec": 0.854,
+    "latency_sec": 0.709,
     "error": null
   },
   {
@@ -1148,7 +1148,7 @@
     "num_sources": 0,
     "source_grounded": false,
     "iterations": 0,
-    "latency_sec": 0.95,
+    "latency_sec": 0.783,
     "error": null
   },
   {
@@ -1166,7 +1166,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 26.11,
+    "latency_sec": 24.237,
     "error": null
   },
   {
@@ -1184,7 +1184,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 27.827,
+    "latency_sec": 26.44,
     "error": null
   },
   {
@@ -1202,7 +1202,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 21.44,
+    "latency_sec": 20.261,
     "error": null
   },
   {
@@ -1220,7 +1220,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 2,
-    "latency_sec": 19.618,
+    "latency_sec": 18.669,
     "error": null
   },
   {
@@ -1238,7 +1238,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 2,
-    "latency_sec": 9.719,
+    "latency_sec": 8.793,
     "error": null
   },
   {
@@ -1256,7 +1256,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 2,
-    "latency_sec": 8.961,
+    "latency_sec": 8.205,
     "error": null
   },
   {
@@ -1274,7 +1274,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 17.179,
+    "latency_sec": 16.342,
     "error": null
   },
   {
@@ -1292,7 +1292,7 @@
     "num_sources": 3,
     "source_grounded": true,
     "iterations": 1,
-    "latency_sec": 28.479,
+    "latency_sec": 27.378,
     "error": null
   }
 ]
