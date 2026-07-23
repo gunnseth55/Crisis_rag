@@ -1,5 +1,8 @@
 #pip install streamlit
+
 #streamlit run ui/app.py
+
+#add this as model_path in the ui for now : C:\Users\gunn\models\Phi-3-mini-4k-instruct-q4.gguf
 
 import sys
 import time
