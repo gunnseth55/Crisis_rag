@@ -61,10 +61,10 @@ with st.sidebar:
             st.session_state.system_ready=True
     st.divider()
     if st.session_state.get("system_ready"):
-        st.success("System Laoded and ready")
+        st.success("System Loaded and ready")
         st.subheader("background sync")
         sync_manager=load_sync_manager(st.session_state.db_path)
-        st.caption(f"Check every {SYNC_POLL_INTERVAL_SEC // 60} min when online"
+        st.caption(f"Check every {SYNC_POLL_INTERVAL_SEC // 60} min when online, "
                    "Offline is unaffected either ways."
                    )
         if st.button("Sync now", use_container_width=True):
@@ -89,12 +89,12 @@ with st.sidebar:
 
 
 st.title("Crisis Rag")
-st.caption("Offline-first crisis assistance. Answers are grounded in the local knowledge base and are not a substitute for professiobal emergency services")
+st.caption("Offline-first crisis assistance. Answers are grounded in the local knowledge base and are not a substitute for professional emergency services")
 if "messages" not in st.session_state:
     st.session_state.messages=[]
 
 if not st.session_state.get("system_ready"):
-    st.warning("Load the system from teh sidebar before asking any question")
+    st.warning("Load the system from the sidebar before asking any question")
     st.stop()
 
 agent=load_agent(st.session_state.db_path, st.session_state.model_path)
