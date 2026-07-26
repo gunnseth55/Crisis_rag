@@ -49,7 +49,7 @@ with st.sidebar:
         help="Path to your Phi-3 Mini GGUF file — same one you'd pass with --model on the CLI.",
     )
     db_path= st.text_input("Vector database path", value=DEFAULT_DB_PATH)
-    load_clicked=st.button("Load Crisis Rag", type="primary", use_container_width=True)
+    load_clicked=st.button("Load your Crisis Assistant", type="primary", use_container_width=True)
     if load_clicked:
         if not model_path or not Path(model_path).exists():
             st.error("Model file not founf at that path. Double check it and try again.")
