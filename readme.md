@@ -302,7 +302,7 @@ Sync runs automatically inside `phase_three/chat.py`. To configure or test it di
 ```
    Optional: `--interval <seconds>` to change the poll interval (default 1800 = 30 min).
 
-Some official sources (e.g. CDC, WHO's IRIS repository) block automated downloads outright — this
+Some official sources (e.g. CDC, WHO's IRIS repository) block automated downloads outright this
 is a known limitation, not a bug in the sync mechanism itself.
 
 ---
