@@ -247,9 +247,8 @@ python phase_one/ingest.py --test
 
 ---
 
-## Running the assistant
 
-### Option A — Full agent (recommended, main entry point)
+### Option A — Full agent (main entry point)
 
 Intent-aware triage, ReAct reformulation loop, and background sync all included.
 
