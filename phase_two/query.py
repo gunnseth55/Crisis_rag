@@ -78,8 +78,6 @@ def run_cli(model_path: str, db_path: str):
     print("="*60)
     print("\nInitialising system...")
  
-    # Initialise the pipeline — loads embedder + LanceDB + LLM
-    # This takes 10-20 seconds on first run due to model loading
     try:
         pipeline = RAGPipeline(db_path=db_path, model_path=model_path)
     except Exception as e:
@@ -99,6 +97,7 @@ def run_cli(model_path: str, db_path: str):
  
     while True:
         # Get user input
+        
         try:
             user_input = input("\nYou: ").strip()
         except (EOFError, KeyboardInterrupt):
