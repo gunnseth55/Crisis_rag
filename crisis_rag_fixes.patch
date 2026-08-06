@@ -1,0 +1,30 @@
+diff --git a/requirements.txt b/requirements.txt
+index 7fee31e..bae829e 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -1,7 +1,8 @@
+-
+ sentence-transformers
+ lancedb
+ pyarrow
+ tqdm
+ pymupdf
+- 
++llama-cpp-python
++streamlit
++
+diff --git a/ui/app.py b/ui/app.py
+index 19f5fc4..f13aca1 100644
+--- a/ui/app.py
++++ b/ui/app.py
+@@ -84,8 +84,8 @@ with st.sidebar:
+         if st.button("Clear conversation", use_container_width=True):
+             st.session_state["messages"]=[]
+             st.rerun()
+-        else:
+-            st.info("Enter your model path above and click **Load Crisis RAG** to begin." )
++    else:
++        st.info("Enter your model path above and click **Load Crisis RAG** to begin." )
+ 
+ 
+ st.title("Crisis Rag")

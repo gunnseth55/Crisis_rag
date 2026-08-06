@@ -84,8 +84,8 @@ with st.sidebar:
         if st.button("Clear conversation", use_container_width=True):
             st.session_state["messages"]=[]
             st.rerun()
-        else:
-            st.info("Enter your model path above and click **Load Crisis RAG** to begin." )
+    else:
+        st.info("Enter your model path above and click **Load Crisis RAG** to begin." )
 
 
 st.title("Crisis Rag")
@@ -169,6 +169,3 @@ if query:
                     "sources":response.sources,
                 },
             })
-
-
-
