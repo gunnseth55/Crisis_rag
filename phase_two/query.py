@@ -107,8 +107,7 @@ def run_cli(model_path: str, db_path: str):
         if not user_input:
             continue
  
-        # ── Special commands ──────────────────────────────────────────────
- 
+        # ── Special commands
         if user_input.lower() == "quit":
             print("Session ended. Stay safe.")
             break

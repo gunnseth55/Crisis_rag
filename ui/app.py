@@ -2,7 +2,8 @@
 
 #streamlit run ui/app.py
 
-#add this as model_path in the ui for now : C:\Users\gunn\models\Phi-3-mini-4k-instruct-q4.gguf
+#add this as model_path in the ui for now :
+#  C:\Users\gunn\models\Phi-3-mini-4k-instruct-q4.gguf
 
 import sys
 import time
@@ -27,7 +28,7 @@ INTENT_COLORS = {
 
 st.set_page_config(page_title="Crisis RAG", page_icon="🆘", layout="centered")
 
-@st.cache_resource(show_spinner="Loading the model and knowledge base (first load can take a minute)...")
+@st.cache_resource(show_spinner="Loading the model and knowledge base (first load can take a minute, please wait)...")
 def load_agent(db_path: str, model_path: str) -> CrisisAgent:
     return CrisisAgent(db_path=db_path, model_path=model_path)
  
