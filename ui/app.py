@@ -24,15 +24,15 @@ INTENT_COLORS = {
     "GENERAL": "#6c757d",
     "NO_TRIAGE": "#6c757d",
 }
- 
+
 
 st.set_page_config(page_title="Crisis RAG", page_icon="🆘", layout="centered")
 
 @st.cache_resource(show_spinner="Loading the model and knowledge base (first load can take a minute, please wait)...")
 def load_agent(db_path: str, model_path: str) -> CrisisAgent:
     return CrisisAgent(db_path=db_path, model_path=model_path)
- 
- 
+
+
 @st.cache_resource(show_spinner=False)
 def load_sync_manager(db_path: str) -> SyncManager:
     manager = SyncManager(db_path=db_path, poll_interval_sec=SYNC_POLL_INTERVAL_SEC)
@@ -118,7 +118,7 @@ for msg in st.session_state.messages:
             if meta["sources"]:
                 with st.expander(f"Sources ({len(meta['sources'])})"):
                     for s in meta["sources"]:
-                        st.markdown(f"- **{s['source']}** — {s['score']*100:.0f}% match") 
+                        st.markdown(f"- **{s['source']}** — retrieval score: {s['score']:.3f}")
 
 #next question
 query=st.chat_input("Describe your situation...")
@@ -132,9 +132,9 @@ if query:
             try:
                 response=agent.run(query)
                 latency=time.time()-t0
-                error=None 
+                error=None
             except Exception as e:
-                response=None 
+                response=None
                 latency=time.time()-t0
                 error=str(e)
         if error:
@@ -158,7 +158,7 @@ if query:
             if response.sources:
                 with st.expander(f"Sources ({len(response.sources)})"):
                     for s in response.sources:
-                        st.markdown(f"- **{s['source']}** -{s['score']*100:.0f}% match")
+                        st.markdown(f"- **{s['source']}** — retrieval score: {s['score']:.3f}")
             st.session_state.messages.append({
                 "role":"assistant",
                 "content":response.answer,

@@ -13,7 +13,6 @@ Run with:  pytest tests/test_triage_classifier.py -v
 import sys
 from pathlib import Path
 
-import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -54,17 +53,6 @@ def test_keyword_classify_no_match_returns_general_zero_score():
     assert score == 0
 
 
-@pytest.mark.xfail(
-    reason=(
-        "BUG (found while writing this suite): KEYWORD_RULES matching is "
-        "plain substring `in` with no word boundaries. 'weather' contains "
-        "'heat' and 'eat' (both SURVIVAL keywords), so an unrelated query "
-        "scores 2 keyword hits and gets locked in as high-confidence "
-        "SURVIVAL by Rule 2 (score >= 2 trusts keywords over the model). "
-        "Fix: match on word boundaries, e.g. re.search(rf'\\b{kw}', q)."
-    ),
-    strict=True,
-)
 def test_keyword_classify_weather_is_not_survival():
     intent, score = _keyword_classify("what is the weather today")
     assert intent == "GENERAL"
@@ -146,21 +134,6 @@ def test_no_keyword_match_and_unparseable_model_defaults_general():
     assert result.confidence == "low"
 
 
-@pytest.mark.xfail(
-    reason=(
-        "BUG (found while writing this suite): shared/query_normalizer.py "
-        "uses difflib.get_close_matches(cutoff=0.7) against HAZARD_VOCABULARY "
-        "to catch typos, but 0.7 is loose enough to catch real words too - "
-        "'France' has a 0.714 similarity ratio to 'fracture' and gets "
-        "'fracture' appended to the query. That then trips "
-        "_has_strong_medical_signal, so an entirely unrelated query like "
-        "'what is the capital of France' is forced into MEDICAL with high "
-        "confidence, overriding everything else. Fix: raise the cutoff, or "
-        "require the fuzzy match to also be flagged in the same word "
-        "position rather than free-floating in the string."
-    ),
-    strict=True,
-)
 def test_normalize_query_does_not_hallucinate_hazard_words():
     normalized = normalize_query("what is the capital of France")
     assert "fracture" not in normalized
@@ -178,3 +151,27 @@ def test_medical_signal_still_wins_even_with_emotional_language():
     clf = make_classifier(model_reply=" EMOTIONAL")
     result = clf.classify("I'm so scared, I'm bleeding a lot and don't know what to do")
     assert result.intent == "MEDICAL"
+
+
+def test_medical_stems_do_not_match_inside_unrelated_words():
+    assert not _has_strong_medical_signal("discuss heartburn prevention")
+    assert _keyword_classify("explain the execution process") == ("GENERAL", 0)
+
+
+def test_normalizer_preserves_observed_hazard_typos():
+    assert "landslide" in normalize_query("lamdlside safety")
+    normalized = normalize_query("blooding")
+    assert "bleeding" in normalized
+    assert "flooding" in normalized
+    assert make_classifier(" EVACUATION").classify("blooding").intent == "MEDICAL"
+
+
+def test_strong_rules_skip_model_inference():
+    clf = make_classifier()
+
+    def unexpected_model_call(query):
+        raise AssertionError("Strong keyword rules should not run model inference")
+
+    clf._model_classify = unexpected_model_call
+    assert clf.classify("my leg is bleeding").intent == "MEDICAL"
+    assert clf.classify("evacuate and escape now").intent == "EVACUATION"

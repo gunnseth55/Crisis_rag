@@ -125,8 +125,7 @@ def run_chat(model_path:str, db_path:str):
             print_separator("·")
             print("Sources:")
             for src in response.sources:
-                score_pct = int(src["score"] * 100)
-                print(f"  • {src['source']}  ({score_pct}% match)")
+                print(f"  • {src['source']}  (retrieval score: {src['score']:.3f})")
         print(f"\n({elapsed:.1f}s)")
         print_separator()
         conversation.append({"role": "user",      "content": user_input})
@@ -146,7 +145,7 @@ def main():
  
     if not Path(args.db).exists():
         print(f"[ERROR] Database not found: {args.db}")
-        print("Run: python phase1/ingest.py")
+        print("Run: python phase_one/ingest.py")
         sys.exit(1)
  
     run_chat(model_path=args.model, db_path=args.db)

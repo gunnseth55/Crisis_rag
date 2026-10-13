@@ -1,11 +1,11 @@
 """
-phase3/triage_classifier.py — Intent classification before retrieval
+phase3/triage_classifier.py - Intent classification before retrieval
 
 CHANGE LOG (fix after observed misclassification):
     Original design trusted the model over keywords on disagreement.
     Observed failure: "my leg is bleeding and it won't stop" was
     classified EVACUATION by the model despite an unambiguous MEDICAL
-    keyword match ("bleeding"). This is dangerous — it caused the
+    keyword match ("bleeding"). This is dangerous - it caused the
     MEDICAL-specific stricter retrieval threshold (0.50) to be skipped
     in favour of EVACUATION's looser threshold (0.45).
 
@@ -18,20 +18,20 @@ CHANGE LOG (fix after observed misclassification):
     This mirrors real-world triage protocols (e.g. START triage) where
     explicit symptom presence overrides general impression.
 
-CHANGE LOG (fix — model fallback always returned EMOTIONAL):
+CHANGE LOG (fix - model fallback always returned EMOTIONAL):
     _model_classify used stop=[..., " ", ...]. Phi-3 generates the answer
     word as a single token with a leading space (e.g. " MEDICAL"), so
-    generation was cut off at that space before any letters came out —
+    generation was cut off at that space before any letters came out -
     `raw` was almost always "". Downstream, the fuzzy match did
     `intent.startswith(clean[:4])`, and startswith("") is True for every
     string, so it silently returned whichever intent happened to be first
-    in Python's (arbitrary, per-process) INTENTS set iteration order —
+    in Python's (arbitrary, per-process) INTENTS set iteration order -
     observed as EMOTIONAL every time in one run. This meant every query
     with no keyword hit (general questions, out-of-scope questions) was
     routed to the hardcoded EMOTIONAL response, skipping RAG entirely.
 
     FIX: removed " " from the stop list, and added an explicit guard so
-    an empty `clean` string returns None (→ Rule 5 falls back to GENERAL)
+    an empty `clean` string returns None (-> Rule 5 falls back to GENERAL)
     instead of matching every intent.
 """
 
@@ -43,11 +43,11 @@ from shared.query_normalizer import normalize_query
 
 INTENTS = {"MEDICAL", "EVACUATION", "SURVIVAL", "EMOTIONAL", "GENERAL"}
 
-# Keywords whose presence is considered an unambiguous medical signal —
+# Keywords whose presence is considered an unambiguous medical signal -
 # these should NEVER be overridden by the model, because a missed
 # medical classification is the most dangerous failure mode.
 STRONG_MEDICAL_SIGNALS = [
-    "bleed", "unconscious", "not breath", "cpr", "chok","gasping","burn","fracture","cardiac",""
+    "bleed", "unconscious", "not breath", "cpr", "chok","gasping","burn","fracture","cardiac",
     "heart attack", "seizure", "overdose", "poison","bleeding","collapsed","dizzy","chest pain","stroke","severe pain","injury","dehydration"
 ]
 
@@ -89,6 +89,12 @@ KEYWORD_RULES = [
 ]
 
 
+def _matches_keyword(keyword: str, query: str) -> bool:
+    # Keep stem matching (injur -> injury), but never match inside a word
+    # (eat -> weather, cut -> execution).
+    return bool(keyword and re.search(r"\b" + re.escape(keyword), query))
+
+
 def _keyword_classify(query: str) -> tuple[str, int]:
     """
     Returns (intent, score) where score = number of matched keywords.
@@ -97,7 +103,7 @@ def _keyword_classify(query: str) -> tuple[str, int]:
     q = query.lower()
     scores = {}
     for intent, keywords in KEYWORD_RULES:
-        score = sum(1 for kw in keywords if kw in q)
+        score = sum(1 for kw in keywords if _matches_keyword(kw, q))
         if score > 0:
             scores[intent] = score
     if not scores:
@@ -108,7 +114,7 @@ def _keyword_classify(query: str) -> tuple[str, int]:
 
 def _has_strong_medical_signal(query: str) -> bool:
     q = query.lower()
-    return any(sig in q for sig in STRONG_MEDICAL_SIGNALS)
+    return any(_matches_keyword(sig, q) for sig in STRONG_MEDICAL_SIGNALS)
 
 
 class TriageClassifier:
@@ -116,12 +122,12 @@ class TriageClassifier:
     Classifies a crisis query into one of five intent categories.
 
     Priority order (changed after observed misclassification):
-        1. Strong medical signal in keywords → MEDICAL, always, no override
-        2. Keyword score >= 2 → trust keywords (model can't override)
-        3. Keyword score == 1 and model agrees → high confidence
-        4. Keyword score == 1 and model disagrees → trust keywords still
+        1. Strong medical signal in keywords -> MEDICAL, always, no override
+        2. Keyword score >= 2 -> trust keywords (model can't override)
+        3. Keyword score == 1 and model agrees -> high confidence
+        4. Keyword score == 1 and model disagrees -> trust keywords still
            (model is less reliable than a single clear keyword for safety)
-        5. No keyword match at all → trust the model entirely
+        5. No keyword match at all -> trust the model entirely
     """
 
     def __init__(self, llm_instance):
@@ -130,46 +136,46 @@ class TriageClassifier:
     def classify(self, query: str) -> TriageResults:
         normalized_query = normalize_query(query)
         keyword_intent, keyword_score = _keyword_classify(normalized_query)
-        model_intent = self._model_classify(query)
 
-        # Rule 1: unambiguous medical signal always wins — safety first
+        # Rule 1: unambiguous medical signal always wins - safety first
         if _has_strong_medical_signal(normalized_query):
             return TriageResults(
                 intent="MEDICAL",
                 confidence="high",
-                reasoning=f"strong medical keyword detected — overrides model ({model_intent})"
+                reasoning="strong medical keyword detected - model classification not needed"
             )
 
-        # Rule 2: strong keyword signal (2+ matches) — trust keywords
+        # Rule 2: strong keyword signal (2+ matches) - trust keywords
         if keyword_score >= 2:
             return TriageResults(
                 intent=keyword_intent,
                 confidence="high",
-                reasoning=f"strong keyword match ({keyword_score} hits) → {keyword_intent}"
+                reasoning=f"strong keyword match ({keyword_score} hits) -> {keyword_intent}"
             )
 
-        # Rule 3/4: weak keyword signal (1 match) — keywords still take priority
+        # Rule 3/4: weak keyword signal (1 match) - keywords still take priority
+        model_intent = self._model_classify(normalized_query)
         if keyword_score == 1:
             if model_intent == keyword_intent:
                 return TriageResults(
                     intent=keyword_intent, confidence="high",
-                    reasoning=f"model and keyword agree → {keyword_intent}"
+                    reasoning=f"model and keyword agree -> {keyword_intent}"
                 )
             return TriageResults(
                 intent=keyword_intent, confidence="medium",
-                reasoning=f"keyword → {keyword_intent} (1 hit), model → {model_intent} (trusting keyword for safety)"
+                reasoning=f"keyword -> {keyword_intent} (1 hit), model -> {model_intent} (trusting keyword for safety)"
             )
 
-        # Rule 5: no keyword signal — trust the model
+        # Rule 5: no keyword signal - trust the model
         if model_intent is not None:
             return TriageResults(
                 intent=model_intent, confidence="medium",
-                reasoning=f"no keyword match — using model → {model_intent}"
+                reasoning=f"no keyword match - using model -> {model_intent}"
             )
 
         return TriageResults(
             intent="GENERAL", confidence="low",
-            reasoning="no keyword match and model output unparseable — defaulting to GENERAL"
+            reasoning="no keyword match and model output unparseable - defaulting to GENERAL"
         )
 
     def _model_classify(self, query: str) -> str | None:

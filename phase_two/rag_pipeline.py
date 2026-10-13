@@ -7,9 +7,8 @@ Changes from previous version:
   Better to say "I don't have that" than to answer from wrong context.
 
 - query_with_history disabled — the previous implementation was prepending
-  the last answer as text, which confused retrieval. The agent in Phase 3
-  will handle conversation context properly through the ReAct loop.
-  For now, every question is treated independently.
+  the last answer as text, which confused retrieval. Both this pipeline
+  and the Phase 3 agent currently treat every question independently.
 
 - Added source score logging so you can see retrieval quality at a glance.
 """
@@ -111,8 +110,7 @@ class RAGPipeline:
     def query_with_history(self, question: str, history: list) -> dict:
         """
         NOTE: History-aware querying is intentionally simplified here.
-        The ReAct agent in Phase 3 will handle multi-turn conversation
-        properly. For Phase 2, we treat each question independently
+        Both Phase 2 and the Phase 3 agent treat each question independently
         to avoid retrieval contamination from previous answers.
         """
         return self.query(question)

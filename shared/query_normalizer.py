@@ -43,7 +43,14 @@ HAZARD_VOCABULARY = [
 ]
 
 _MIN_WORD_LEN = 5   # skip short/common words entirely — too many false positives below this
-_MATCH_CUTOFF = 0.7  # difflib similarity ratio; tuned against real typos, see module tests
+_MATCH_CUTOFF = 0.8  # conservative enough to avoid France -> fracture
+
+# Preserve observed hazard typos below the conservative fuzzy cutoff.
+# The ambiguous "blooding" needs both medical and flood readings.
+_KNOWN_TYPOS = {
+    "blooding": ["bleeding", "flooding"],
+    "lamdlside": ["landslide"],
+}
 
 
 def normalize_query(query: str, max_candidates: int = 2) -> str:
@@ -58,7 +65,7 @@ def normalize_query(query: str, max_candidates: int = 2) -> str:
         lower = word.lower()
         if len(word) < _MIN_WORD_LEN or lower in HAZARD_VOCABULARY:
             return word
-        matches = difflib.get_close_matches(
+        matches = _KNOWN_TYPOS.get(lower) or difflib.get_close_matches(
             lower, HAZARD_VOCABULARY, n=max_candidates, cutoff=_MATCH_CUTOFF
         )
         if not matches:

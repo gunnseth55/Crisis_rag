@@ -1,5 +1,8 @@
 # Crisis RAG
 
+For a code-grounded explanation, demo commands, review findings, and the
+limits of the saved evaluation results, see [PRESENTATION_NOTES.md](PRESENTATION_NOTES.md).
+
 An **offline-first, intent-aware crisis assistance system**. It answers disaster and first-aid
 questions entirely on a local device — no internet connection required at query time — by
 combining a curated crisis knowledge base, a local small language model (Phi-3 Mini), and an
@@ -287,8 +290,9 @@ Optional flag for either option: `--db <path>` (defaults to `data/lancedb`).
 Sync runs automatically inside `phase_three/chat.py`. To configure or test it directly:
 
 1. Edit `sync/sources.json` and add real, verified download URLs for documents you want
-   auto-checked (see the file's `_readme` field for the exact format). It ships empty — a wrong
-   URL would silently replace a correct document with the wrong content, so nothing is pre-filled.
+   auto-checked. The current configuration contains a GitHub gitignore README
+   used to test sync; it does not update emergency guidance. Replace that test
+   entry with verified document download URLs before demonstrating guidance updates.
 
 2. Run a one-off check (useful for testing):
 ```

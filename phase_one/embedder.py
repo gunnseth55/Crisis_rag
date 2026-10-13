@@ -12,10 +12,15 @@ class Embedder:
     def _load(self):
         if self._model is None:
             print(f"[Embedder] Loading {MODEL_NAME}...")
-            print("  (this downloads ~90MB on first run, then uses cache)")
-            self._model = SentenceTransformer(MODEL_NAME)
+            print("  (uses local cache; downloads ~90MB only if missing)")
+            try:
+                self._model = SentenceTransformer(MODEL_NAME, local_files_only=True)
+            except OSError:
+                # Setup may download missing weights. Once cached, queries
+                # must not make Hub metadata requests or wait for the network.
+                self._model = SentenceTransformer(MODEL_NAME)
             print("[Embedder] Ready.")
-    
+
     def embed(self, text: str) -> list[float]:
         self._load()
         vector = self._model.encode(text, normalize_embeddings=True, show_progress_bar=False)
@@ -34,4 +39,4 @@ class Embedder:
 
 
 
-    
+

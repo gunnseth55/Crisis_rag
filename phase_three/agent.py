@@ -9,7 +9,7 @@ PURPOSE:
     ReAct: query->think->retrieve->observe->think->act
      The "think" step allows the agent to:
     - Decide if retrieved context is sufficient or needs a different query
-    - Handle multi-part questions ("I have a wound AND need to evacuate")
+    - Route a query to one intent (medical signals take priority in mixed queries)
     - Know when to stop and say "I don't have that" vs guess
     INTENT-SPECIFIC CONFIGURATIONS:
     Each intent gets its own:
@@ -128,7 +128,7 @@ class AgentResponse:
     intent:str
     confidence:str
     answer:str
-    sources:str
+    sources:list[dict]
     iterations:int
 
 class CrisisAgent:
@@ -274,8 +274,7 @@ class CrisisAgent:
            context="\n\n".join(blocks),
            question=query,
        )
-       #temporarily swap the system prompt to the intent-specific one
-       original_system=self.llm._model
+       # Build a completion with the intent-specific system prompt.
        full_prompt= (
             f"<|system|>\n{system_prompt}<|end|>\n"
             f"<|user|>\n{prompt}<|end|>\n"
